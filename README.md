@@ -80,27 +80,29 @@ Opening this repo in VS Code will prompt you to install the recommended extensio
 code --install-extension Continue.continue
 ```
 
-**Configure per-project.** This repo ships a [`.continuerc.json`](.continuerc.json) that points Continue at `http://localhost:8080/v1` and merges on top of your global `~/.continue/config.yaml`:
+**Configure.** Continue reads its config from `~/.continue/config.yaml` (workspace-level `.continuerc.json` is legacy and unreliable in current versions — the global config is the source of truth). Add a `models` entry pointing at the local server:
 
-```json
-{
-  "models": [
-    {
-      "title": "Qwen3.6-27B (local llama.cpp)",
-      "provider": "openai",
-      "model": "qwen3",
-      "apiBase": "http://localhost:8080/v1",
-      "apiKey": "dummy",
-      "contextLength": 32768
-    }
-  ],
-  "mergeBehavior": "merge"
-}
+```yaml
+name: Main Config
+version: 1.0.0
+schema: v1
+models:
+  - name: Qwen3.6-27B (local llama.cpp)
+    provider: openai
+    model: qwen3
+    apiBase: http://localhost:8080/v1
+    apiKey: dummy
+    defaultCompletionOptions:
+      contextLength: 32768
+    roles:
+      - chat
+      - edit
+      - apply
 ```
 
 - `apiKey` must be non-empty even though `llama-server` ignores it.
 - `model` can be any string — `llama-server` serves whatever it loaded.
-- `mergeBehavior: "merge"` layers this on top of the global config; use `"overwrite"` to replace top-level keys entirely.
+- Continue auto-reloads on save; pick the model from the assistant selector at the top of the chat panel.
 
 **Use:** reload VS Code (`Ctrl+Shift+P` → "Reload Window"), then:
 - `Ctrl+L` — chat panel
