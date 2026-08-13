@@ -80,7 +80,7 @@ Opening this repo in VS Code will prompt you to install the recommended extensio
 code --install-extension Continue.continue
 ```
 
-**Configure.** Continue reads its config from `~/.continue/config.yaml` (workspace-level `.continuerc.json` is legacy and unreliable in current versions — the global config is the source of truth). Add a `models` entry pointing at the local server:
+**Configure.** Continue reads its config from `~/.continue/config.yaml` (workspace-level `.continuerc.json` is legacy and unreliable in current versions — the global config is the source of truth). Replace the file contents with:
 
 ```yaml
 name: Main Config
@@ -103,6 +103,7 @@ models:
 - `apiKey` must be non-empty even though `llama-server` ignores it.
 - `model` can be any string — `llama-server` serves whatever it loaded.
 - Continue auto-reloads on save; pick the model from the assistant selector at the top of the chat panel.
+- If you also want autocomplete or embeddings, add more entries with `roles: [autocomplete]` / `[embed]` — a separate model per role is fine.
 
 **Use:** reload VS Code (`Ctrl+Shift+P` → "Reload Window"), then:
 - `Ctrl+L` — chat panel
