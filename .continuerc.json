@@ -1,0 +1,13 @@
+{
+  "models": [
+    {
+      "title": "Qwen3.6-27B (local llama.cpp)",
+      "provider": "openai",
+      "model": "qwen3",
+      "apiBase": "http://localhost:8080/v1",
+      "apiKey": "dummy",
+      "contextLength": 32768
+    }
+  ],
+  "mergeBehavior": "merge"
+}
