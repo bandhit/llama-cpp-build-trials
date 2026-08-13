@@ -13,15 +13,30 @@ sudo apt install -y git build-essential cmake
 
 ## Build
 
-Clone the repository and build with CMake:
+The upstream [llama.cpp](https://github.com/ggml-org/llama.cpp) source lives in [`main/`](main) as a git submodule pinned to a known-good commit. Clone this repo with submodules, then build with CMake:
 
 ```bash
-git clone https://github.com/ggml-org/llama.cpp.git main
+# On first clone
+git clone --recurse-submodules git@github.com:bandhit/llama-cpp-build-trials.git
+cd llama-cpp-build-trials
+
+# Or, if you already cloned without --recurse-submodules
+git submodule update --init --recursive
+```
+
+```bash
 cd main
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
+```
+
+To bump to a newer llama.cpp commit later:
+
+```bash
+cd main && git fetch && git checkout <commit-or-tag>
+cd .. && git add main && git commit -m "Bump llama.cpp submodule"
 ```
 
 ### GPU acceleration (optional)
