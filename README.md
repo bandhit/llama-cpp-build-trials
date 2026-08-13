@@ -66,13 +66,9 @@ Once running, the OpenAI-compatible API is available at `http://localhost:8080/v
 
 > **Security note:** `llama-server` defaults to CORS-open and no API key. Fine on localhost — do not expose port 8080 to your network without setting `--api-key`.
 
-## Use from VS Code
+## Use from VS Code — Chat via Continue
 
-Opening this repo in VS Code will prompt you to install the recommended extensions listed in [`.vscode/extensions.json`](.vscode/extensions.json) — Continue (chat) and llama.vscode (autocomplete). You can also install them manually with the commands below.
-
-### Chat — via Continue
-
-[Continue](https://marketplace.visualstudio.com/items?itemName=Continue.continue) is a general chat + inline-edit extension that speaks the OpenAI Chat Completions protocol, which `llama-server` implements.
+Opening this repo in VS Code will prompt you to install the recommended extension listed in [`.vscode/extensions.json`](.vscode/extensions.json) — [Continue](https://marketplace.visualstudio.com/items?itemName=Continue.continue), a general chat + inline-edit extension that speaks the OpenAI Chat Completions protocol, which `llama-server` implements.
 
 **Install:**
 
@@ -103,34 +99,8 @@ models:
 - `apiKey` must be non-empty even though `llama-server` ignores it.
 - `model` can be any string — `llama-server` serves whatever it loaded.
 - Continue auto-reloads on save; pick the model from the assistant selector at the top of the chat panel.
-- If you also want autocomplete or embeddings, add more entries with `roles: [autocomplete]` / `[embed]` — a separate model per role is fine.
 
 **Use:** reload VS Code (`Ctrl+Shift+P` → "Reload Window"), then:
 - `Ctrl+L` — chat panel
 - `Ctrl+I` — inline edit on selected code
 - `Ctrl+Shift+L` — add selection to chat context
-
-### Code completion — via llama.vscode
-
-[llama.vscode](https://marketplace.visualstudio.com/items?itemName=ggml-org.llama-vscode) is the official extension for fill-in-middle (FIM) autocomplete. It requires a **FIM-trained coder model** — a general chat model like Qwen3.6-27B will not work well.
-
-**Install:**
-
-```bash
-code --install-extension ggml-org.llama-vscode
-```
-
-**Run a coder model on port 8012** (the extension's default), in parallel with your chat server:
-
-```bash
-cd ~/workspaces/llama_cpp/main/build/bin
-
-# <8GB VRAM
-./llama-server -hf ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF \
-  --port 8012 -ub 1024 -b 1024 --ctx-size 0 --cache-reuse 256 -ngl 99
-
-# 8–16GB VRAM: Qwen2.5-Coder-3B-Q8_0-GGUF
-# 16GB+ VRAM:  Qwen2.5-Coder-7B-Q8_0-GGUF
-```
-
-Type in any code file — completions should appear inline. Click the `llama-vscode` status bar item (or press `Ctrl+Shift+M`) for the menu.
