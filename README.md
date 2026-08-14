@@ -72,14 +72,38 @@ cd bin
 
 | Flag | Description |
 | --- | --- |
-| `-hf <repo>:<quant>` | Fetch a model from Hugging Face by repo and quant tag. |
+| `-hf <repo>:<quant>` | Fetch a model from Hugging Face by repo and quant tag. Shorthand for `--hf-repo <repo> --hf-file <auto-picked-file>`. |
+| `--hf-repo <repo>` / `--hf-file <file>` | Explicit repo + file pair. Use this when the repo has multiple GGUFs and `-hf` can't guess, e.g. community fine-tunes. |
 | `--jinja` | Use the model's Jinja chat template for prompt formatting. |
 | `--port 8080` | Serve the HTTP API on port 8080. |
 | `-ngl 99` | Offload up to 99 layers to the GPU (use a large number to offload all). |
+| `-c 65536` | Set context window to 65536 tokens (default is model-dependent; larger `-c` uses more VRAM). |
+| `CUDA_VISIBLE_DEVICES=0` | Env var: pin the process to GPU 0 on multi-GPU systems. Use `0,1` for multiple, or leave unset to use all visible GPUs. |
 
 Once running, the OpenAI-compatible API is available at `http://localhost:8080/v1`.
 
 > **Security note:** `llama-server` defaults to CORS-open and no API key. Fine on localhost — do not expose port 8080 to your network without setting `--api-key`.
+
+### Examples
+
+**Qwen3.6-27B on GPU 0 with a 64K context window:**
+
+```bash
+CUDA_VISIBLE_DEVICES=0 llama-server \
+  -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL \
+  --jinja --port 8080 -ngl 99 -c 65536
+```
+
+**Fable Fusion 27B (community fine-tune, uncensored) — explicit file selection:**
+
+```bash
+CUDA_VISIBLE_DEVICES=0 llama-server \
+  --hf-repo DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-NEO-MAX-MTP-GGUF \
+  --hf-file Qwen3.6-27B-Fable-Fus-711-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q4_K_M.gguf \
+  --jinja --port 8080 -ngl 99 -c 65536
+```
+
+These call `llama-server` directly (from `PATH` if installed system-wide) instead of `./llama-server` from `build/bin/` — swap in whichever path applies to your setup.
 
 ## Use from VS Code — Chat via Continue
 
