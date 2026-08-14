@@ -103,7 +103,25 @@ CUDA_VISIBLE_DEVICES=0 llama-server \
   --jinja --port 8080 -ngl 99 -c 65536
 ```
 
+**Heretic v2 27B (another uncensored fine-tune) — `-hf` shorthand:**
+
+```bash
+CUDA_VISIBLE_DEVICES=0 llama-server \
+  -hf llmfan46/Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-GGUF:Q4_K_M \
+  --jinja --port 8080 -ngl 99 -c 65536
+```
+
 These call `llama-server` directly (from `PATH` if installed system-wide) instead of `./llama-server` from `build/bin/` — swap in whichever path applies to your setup.
+
+### Chat from the terminal
+
+`llama-cli` can act as a client to a running `llama-server` (no need to reload the model — it uses the one already served):
+
+```bash
+llama-cli --server-base http://localhost:8080
+```
+
+Handy for a quick REPL check that the server is responding before wiring up VS Code.
 
 ## Use from VS Code — Chat via Continue
 
